@@ -28,8 +28,8 @@ export default function Home({ data }) {
           <a key={ev.id} href={`events/${ev.id}`}>
             <Image
               alt={ev.title}
-              width={200}
-              height={100}
+              width={300}
+              height={300}
               src={ev.image}
             />
             <h2>{ev.title}</h2>
