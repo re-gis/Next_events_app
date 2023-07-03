@@ -1,27 +1,44 @@
+import Image from "next/image";
 import React from "react";
 
-const Event = () => {
+const Event = ({ data }) => {
   return (
     <div>
-      <h1>Event in London</h1>
-      <div>
-        <a href="">
-          <img src="" alt="" />
-          <h2>Events in London</h2>
-        </a>
-
-        <a href="">
-          <img src="" alt="" />
-          <h2>Events in San Francisco</h2>
-        </a>
-
-        <a href="">
-          <img src="" alt="" />
-          <h2>Events in Barcelona</h2>
-        </a>
-      </div>
+      <Image src={data.image} width={1000} height={500} alt={data.title} />
+      <h1>{data.title}</h1>
+      <p>{data.description}</p>
     </div>
   );
 };
 
 export default Event;
+
+
+
+export async function getStaticPaths() {
+  const data = await import("../../../data/data.json");
+  const { allEvents } = data;
+
+  const allPaths = allEvents.map((path) => {
+    return {
+      params: {
+        cat: path.city,
+        id: path.id,
+      },
+    };
+  });
+  return {
+    paths: allPaths,
+    fallback: false,
+  };
+}
+
+
+export async function getStaticProps(context) {
+  const { allEvents } = await import("../../../data/data.json");
+  const id = context.params.id;
+  const eventData = allEvents.find((ev) => id === ev.id);
+  return {
+    props: { data: eventData },
+  };
+}
